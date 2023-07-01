@@ -8,16 +8,16 @@ import { IcardMemory } from 'src/app/interface/IcardMemory';
   styleUrls: ['./memory.component.scss']
 })
 export class MemoryComponent implements OnInit {
- unshuffledArray:IcardMemory[] = []
- cardContainer:IcardMemory[] = []
- arrayChecker:IcardMemory[] = []
- move:number = 0
- lastClick:number = 0
- clickDelay:number = 300
- minute:number = 0
- second:number = 0
- timerID:any
+ unshuffledArray:IcardMemory[] = []// for start logic
+ cardContainer:IcardMemory[] = [] //
+ arrayChecker:IcardMemory[] = [] //for checkSameCard
+ lastClick:number = 0    // for not spam play()
+ clickDelay:number = 550//
+ minute:number = 0 //for timer
+ second:number = 0//
+ timerID:any     //
  winAlert:boolean=false
+ move:number = 0
 
   ngOnInit(): void {
     this.start()
@@ -31,6 +31,7 @@ export class MemoryComponent implements OnInit {
           value: y,
           fold: true,
           find:false,
+          flip:false
         }
         this.unshuffledArray.push(card)
         this.cardContainer= this.shuffleArray(this.unshuffledArray)
@@ -42,6 +43,7 @@ export class MemoryComponent implements OnInit {
     if(!this.delay()){return}
     if(card.fold && !card.find ){
       card.fold = false
+      card.flip = true
       this.arrayChecker.push(card)
       if(this.arrayChecker.length === 2){
         this.checkCardValue()
@@ -60,8 +62,10 @@ export class MemoryComponent implements OnInit {
       setTimeout(()=>{
         this.arrayChecker[0].fold = true
         this.arrayChecker[1].fold = true
+        this.arrayChecker[0].flip = false
+        this.arrayChecker[1].flip = false
         this.arrayChecker = []
-      },300)
+      },500)
 
     }
   }
