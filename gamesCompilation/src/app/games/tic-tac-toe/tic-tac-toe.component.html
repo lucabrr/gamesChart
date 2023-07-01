@@ -1,0 +1,41 @@
+<div
+  class="d-flex justify-content-center align-items-center flex-column h-100 bg-info-subtle"
+>
+  <h1 class="m-0">Tic Tac Toe</h1>
+  <span class="my-3">
+    <button
+      *ngIf="!isStarted"
+      class="btn btn-success me-3 fw-bold"
+      (click)="start()"
+    >
+      Start
+    </button>
+    <button class="btn btn-warning fw-bold" (click)="reset()">Reset</button>
+  </span>
+  <div *ngIf="isStarted" class="container">
+    <div class="row row-cols-3">
+      <div
+        class="col p-0 box fs-1 d-flex justify-content-center align-items-center"
+        *ngFor="let box of grid"
+        (click)="play(box)"
+      >
+        {{ box.value }}
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isStarted">W:{{ won }} D:{{ draw }} L:{{ lose }}</div>
+  <ng-template #content let-modal>
+    <div class="modal-body text-center">
+      <p>{{ winner }} ha vinto!</p>
+    </div>
+    <div class="modal-footer justify-content-center">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="modal.close(); reset()"
+      >
+        Gioca di nuovo
+      </button>
+    </div>
+  </ng-template>
+</div>

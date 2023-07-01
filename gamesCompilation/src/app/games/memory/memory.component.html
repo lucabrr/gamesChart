@@ -1,0 +1,23 @@
+<div class="container">
+  <h1 class="text-center mb-5">Memory game</h1>
+  <p class="text-end fs-2 fw-bold">{{ minute }}:{{ second }}</p>
+  <div class="row row-cols-4">
+    <div
+      class="col mb-3"
+      *ngFor="let card of cardContainer"
+      (click)="play(card)"
+    >
+      <div class="card" style="width: 18rem">
+        <div class="card-body p-0" [ngClass]="{ found: card.find }">
+          <h5 class="card-title text-center p-0 m-0" *ngIf="!card.fold">
+            {{ card.value }}
+          </h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-end fs-2 fw-bold">moves : {{ move }}</div>
+  <div class="alert alert-primary" role="alert" *ngIf="winAlert">
+    il tuo record : {{ move }} mosse in {{ minute }}:{{ second }}
+  </div>
+</div>

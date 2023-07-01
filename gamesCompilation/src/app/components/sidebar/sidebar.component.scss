@@ -1,0 +1,18 @@
+aside{
+  width: 200px;
+  ul{
+    list-style: none;
+    padding: 0px;
+  }
+  li{
+    padding-left: 15px;
+    margin-bottom: 10px;
+    a{
+      text-decoration: none;
+      color: azure;
+      &:hover{
+        color: black;
+      }
+    }
+  }
+}
