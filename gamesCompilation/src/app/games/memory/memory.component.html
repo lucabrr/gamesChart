@@ -1,4 +1,12 @@
-<div class="mainContainer h-100">
+<div
+  *ngIf="!isStarted"
+  class="d-flex justify-content-center align-items-center h-100"
+>
+  <button class="btn btn-success me-3 fw-bold" (click)="start()">
+    start the game
+  </button>
+</div>
+<div class="mainContainer h-100" *ngIf="isStarted">
   <div class="container">
     <h1 class="text-center mb-4">Memory game</h1>
     <div
@@ -29,14 +37,49 @@
             </div>
           </div>
         </div>
-        <!-- <div class="card" style="width: 18rem">
-        <div class="card-body p-0" [ngClass]="{ found: card.find }">
-          <h5 class="card-title text-center p-0 m-0" *ngIf="!card.fold">
-            {{ card.value }}
-          </h5>
-        </div>
-      </div> -->
       </div>
     </div>
   </div>
 </div>
+<ng-template #content let-modal>
+  <div class="modal-body text-center">
+    <p>Inserisciti in classifica!</p>
+  </div>
+  <div
+    class="modal-footer justify-content-center d-flex flex-column align-items-center"
+  >
+    <form
+      class="row text-center alingn-center justify-content-center flex-column form-group"
+      #regForm="ngForm"
+    >
+      <input
+        type="text"
+        class="col-4 mx-auto my-1 form-control"
+        placeholder="username"
+        name="username"
+        ngModel
+        required
+        #username="ngModel"
+        minlength="4"
+        maxlength="8"
+      />
+      <span
+        *ngIf="username.invalid && username.touched"
+        class="alert alert-danger col"
+      >
+        il campo username deve contenere almeno 4 caratteri e massimo 8.
+      </span>
+    </form>
+    <button
+      type="button"
+      class="col-3 mt-2 btn btn-success fw-bold"
+      [disabled]="!regForm.valid"
+      (click)="inviaDati(username.value)"
+    >
+      invia
+    </button>
+    <button type="button" class="btn btn-primary" (click)="modal.close()">
+      Gioca di nuovo
+    </button>
+  </div>
+</ng-template>

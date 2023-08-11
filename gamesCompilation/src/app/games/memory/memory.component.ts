@@ -21,8 +21,6 @@ export class MemoryComponent implements OnInit {
   protected move: number = 0;
   protected isStarted: boolean = false;
 
-  protected username: string = '';
-
   @ViewChild('content')
   myModal!: ElementRef;
 
@@ -115,14 +113,16 @@ export class MemoryComponent implements OnInit {
     }
   }
 
-  protected inviaDati() {
+  protected inviaDati(_username: string) {
     const today = new Date();
     const date = today.toISOString().substring(0, 10);
     const userRecord = {
-      username: this.username,
+      username: _username,
       move: this.move,
       data: date,
     };
+    console.log(userRecord);
+
     this.http.post(this.url, userRecord).subscribe((res) => console.log(res));
   }
 
