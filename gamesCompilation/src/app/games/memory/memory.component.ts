@@ -1,111 +1,134 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IcardMemory } from 'src/app/interface/IcardMemory';
-
 
 @Component({
   selector: 'app-memory',
   templateUrl: './memory.component.html',
-  styleUrls: ['./memory.component.scss']
+  styleUrls: ['./memory.component.scss'],
 })
 export class MemoryComponent implements OnInit {
- unshuffledArray:IcardMemory[] = []// for start logic
- cardContainer:IcardMemory[] = [] //
- arrayChecker:IcardMemory[] = [] //for checkSameCard
- lastClick:number = 0    // for not spam play()
- clickDelay:number = 550//
- minute:number = 0 //for timer
- second:number = 0//
- timerID:any     //
- winAlert:boolean=false
- move:number = 0
+  protected unshuffledArray: IcardMemory[] = []; // for start logic
+  protected cardContainer: IcardMemory[] = []; //
+  protected arrayChecker: IcardMemory[] = []; //for checkSameCard
+  protected lastClick: number = 0; // for not spam play()
+  protected clickDelay: number = 550; //
+  protected minute: number = 0; //for timer
+  protected second: number = 0; //
+  protected timerID: any; //
+  protected winAlert: boolean = false;
+  protected move: number = 0;
+  protected isStarted: boolean = false;
 
-  ngOnInit(): void {
-    this.start()
-  }
+  protected username: string = '';
 
-   start():void{
-    for(let i = 1 ; i<= 20 ; i++){
-      let y = (i <= 10)? i: i - 10
-      let card:IcardMemory =
-        {
-          value: y,
-          fold: true,
-          find:false,
-          flip:false
-        }
-        this.unshuffledArray.push(card)
-        this.cardContainer= this.shuffleArray(this.unshuffledArray)
+  @ViewChild('content')
+  myModal!: ElementRef;
+
+  protected url: string = 'http://localhost:8080/api/userRecord';
+
+  constructor(private http: HttpClient, private modal: NgbModal) {}
+
+  ngOnInit(): void {}
+
+  start(): void {
+    this.modal.open(this.myModal);
+    this.isStarted = true;
+    for (let i = 1; i <= 20; i++) {
+      let y = i <= 10 ? i : i - 10;
+      let card: IcardMemory = {
+        value: y,
+        fold: true,
+        find: false,
+        flip: false,
+      };
+      this.unshuffledArray.push(card);
+      this.cardContainer = this.shuffleArray(this.unshuffledArray);
     }
-    this.timer()
+    this.timer();
   }
 
-   play(card:IcardMemory):void{
-    if(!this.delay()){return}
-    if(card.fold && !card.find ){
-      card.fold = false
-      card.flip = true
-      this.arrayChecker.push(card)
-      if(this.arrayChecker.length === 2){
-        this.checkCardValue()
-        this.move++
+  protected play(card: IcardMemory): void {
+    if (!this.delay()) {
+      return;
+    }
+    if (card.fold && !card.find) {
+      card.fold = false;
+      card.flip = true;
+      this.arrayChecker.push(card);
+      if (this.arrayChecker.length === 2) {
+        this.checkCardValue();
+        this.move++;
       }
     }
-    this.stopGame()
+    this.stopGame();
   }
-  private checkCardValue():void{
-    if (this.arrayChecker[0].value === this.arrayChecker[1].value){
-      this.arrayChecker[0].find = true
-      this.arrayChecker[1].find = true
-      this.arrayChecker = []
-    }
-    else{
-      setTimeout(()=>{
-        this.arrayChecker[0].fold = true
-        this.arrayChecker[1].fold = true
-        this.arrayChecker[0].flip = false
-        this.arrayChecker[1].flip = false
-        this.arrayChecker = []
-      },500)
-
+  private checkCardValue(): void {
+    if (this.arrayChecker[0].value === this.arrayChecker[1].value) {
+      this.arrayChecker[0].find = true;
+      this.arrayChecker[1].find = true;
+      this.arrayChecker = [];
+    } else {
+      setTimeout(() => {
+        this.arrayChecker[0].fold = true;
+        this.arrayChecker[1].fold = true;
+        this.arrayChecker[0].flip = false;
+        this.arrayChecker[1].flip = false;
+        this.arrayChecker = [];
+      }, 500);
     }
   }
   //Fisher-Yates's algoritm
-  private shuffleArray(array:IcardMemory[]):IcardMemory[] {
+  private shuffleArray(array: IcardMemory[]): IcardMemory[] {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
   }
-  private delay():boolean{
-    const currentTime = Date.now()
-    if((currentTime - this.lastClick) >= this.clickDelay ){
-      this.lastClick = currentTime
-      return true
-    }else{return false}
-  }
-  private timer():void{
-    this.timerID = setInterval(()=>{
-      this.second++
-      if(this.second >= 60){
-        this.minute++
-        this.second = 0
-      }
-    },1000)
-  }
-  private winCondition():boolean{
-    return this.cardContainer.every((card)=> card.find)
-  }
-  private stopGame():void{
-    if (this.winCondition()){
-      clearInterval(this.timerID)
-      this.winAlert= true
+  private delay(): boolean {
+    const currentTime = Date.now();
+    if (currentTime - this.lastClick >= this.clickDelay) {
+      this.lastClick = currentTime;
+      return true;
+    } else {
+      return false;
     }
   }
-// set personal best
-// start button
+  private timer(): void {
+    this.timerID = setInterval(() => {
+      this.second++;
+      if (this.second >= 60) {
+        this.minute++;
+        this.second = 0;
+      }
+    }, 1000);
+  }
+  private winCondition(): boolean {
+    return this.cardContainer.every((card) => card.find);
+  }
+  private stopGame(): void {
+    if (this.winCondition()) {
+      clearInterval(this.timerID);
+      this.winAlert = true;
+    }
+  }
+
+  protected inviaDati() {
+    const today = new Date();
+    const date = today.toISOString().substring(0, 10);
+    const userRecord = {
+      username: this.username,
+      move: this.move,
+      data: date,
+    };
+    this.http.post(this.url, userRecord).subscribe((res) => console.log(res));
+  }
+
+  // start button
+
+  // protected getRecord() {
+  //   return this.http.get(this.url).subscribe((res) => console.log(res));
+  // }
 }
-
-
-
-
