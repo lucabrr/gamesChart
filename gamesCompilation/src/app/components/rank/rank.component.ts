@@ -16,6 +16,7 @@ export class RankComponent implements OnInit {
 
   rank: IUserRecord[] = [];
   serverError: boolean = false;
+  isLoading: boolean = false;
 
   constructor(private http: HttpClient) {}
 
@@ -24,10 +25,12 @@ export class RankComponent implements OnInit {
   }
 
   getData() {
+    this.isLoading = true;
     this.http
       .get<Ipageable>(this.url)
       .pipe(
         catchError(() => {
+          this.isLoading = false;
           this.serverError = true;
           return throwError(() => new Error('ops qualcosa è andato storto'));
         })
@@ -35,6 +38,7 @@ export class RankComponent implements OnInit {
       .subscribe((res) => {
         this.rank = res.content;
         console.log(this.rank);
+        this.isLoading = false;
       });
   }
 }

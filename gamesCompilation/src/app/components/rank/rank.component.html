@@ -17,6 +17,13 @@
     </tbody>
   </table>
   <div
+    *ngIf="isLoading"
+    class="alert alert-secondary text-center fw-2"
+    role="alert"
+  >
+    Loading..
+  </div>
+  <div
     *ngIf="serverError"
     class="alert alert-danger text-center fw-2"
     role="alert"
