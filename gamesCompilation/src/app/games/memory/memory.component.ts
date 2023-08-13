@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { IcardMemory } from 'src/app/interface/IcardMemory';
 
@@ -24,6 +24,7 @@ export class MemoryComponent implements OnInit {
   protected isStarted: boolean = false;
   //errorHandler
   usernameExist: boolean = false;
+  usernameRegex: string = '^[a-zA-Z0-9]*$';
 
   @ViewChild('content')
   myModal!: ElementRef;
@@ -39,7 +40,7 @@ export class MemoryComponent implements OnInit {
   ngOnInit(): void {}
 
   start(): void {
-    //this.modal.open(this.myModal); for test
+    this.modal.open(this.myModal, { backdrop: 'static' }); //for test
     this.isStarted = true;
     for (let i = 1; i <= 20; i++) {
       let y = i <= 10 ? i : i - 10;
@@ -118,7 +119,7 @@ export class MemoryComponent implements OnInit {
     if (this.winCondition()) {
       clearInterval(this.timerID);
       this.winAlert = true;
-      this.modal.open(this.myModal);
+      this.modal.open(this.myModal, { backdrop: 'static' });
     }
   }
 

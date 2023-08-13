@@ -1,8 +1,9 @@
 <div
   *ngIf="!isStarted"
-  class="d-flex justify-content-center align-items-center h-100"
+  class="d-flex justify-content-center align-items-center h-100 flex-column"
 >
-  <button class="btn btn-success me-3 fw-bold" (click)="start()">
+  <h1>Start MemoryGame</h1>
+  <button class="btn btn-success me-3 fw-bold mt-2" (click)="start()">
     start the game
   </button>
 </div>
@@ -41,7 +42,7 @@
     </div>
   </div>
 </div>
-<ng-template #content let-modal>
+<ng-template #content let-modal [backdrop]="'static'">
   <div class="modal-body text-center">
     <p>Inserisciti in classifica!</p>
     <div
@@ -71,6 +72,7 @@
         #username="ngModel"
         minlength="4"
         maxlength="8"
+        [pattern]="usernameRegex"
       />
       <span
         *ngIf="username.invalid && username.touched"
