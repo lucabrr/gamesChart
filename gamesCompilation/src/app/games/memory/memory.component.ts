@@ -39,7 +39,7 @@ export class MemoryComponent implements OnInit {
   ngOnInit(): void {}
 
   start(): void {
-    this.modal.open(this.myModal);
+    //this.modal.open(this.myModal); for test
     this.isStarted = true;
     for (let i = 1; i <= 20; i++) {
       let y = i <= 10 ? i : i - 10;

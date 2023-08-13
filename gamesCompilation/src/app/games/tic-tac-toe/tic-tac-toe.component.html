@@ -10,7 +10,9 @@
     >
       Start
     </button>
-    <button class="btn btn-warning fw-bold" (click)="reset()">Reset</button>
+    <button class="btn btn-warning fw-bold" *ngIf="isStarted" (click)="reset()">
+      Reset
+    </button>
   </span>
   <div *ngIf="isStarted" class="container">
     <div class="row row-cols-3">
