@@ -78,13 +78,19 @@
       >
         il campo username deve contenere almeno 4 caratteri e massimo 8.
       </span>
+      <div
+        *ngIf="usernameExist"
+        class="alert alert-danger text-center fw-2"
+        role="alert"
+      >
+        username già in classifica.
+      </div>
     </form>
     <button
       type="button"
       class="col-3 mt-2 btn btn-success fw-bold"
       [disabled]="!regForm.valid"
       (click)="inviaDati(username.value)"
-      (click)="modal.close()"
     >
       invia
     </button>

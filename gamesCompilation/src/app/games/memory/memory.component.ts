@@ -12,16 +12,18 @@ import { IcardMemory } from 'src/app/interface/IcardMemory';
 })
 export class MemoryComponent implements OnInit {
   protected unshuffledArray: IcardMemory[] = []; // for start logic
-  protected cardContainer: IcardMemory[] = []; //
+  protected cardContainer: IcardMemory[] = [];
   protected arrayChecker: IcardMemory[] = []; //for checkSameCard
   protected lastClick: number = 0; // for not spam play()
-  protected clickDelay: number = 550; //
+  protected clickDelay: number = 550;
   protected minute: number = 0; //for timer
-  protected second: number = 0; //
-  protected timerID: any; //
+  protected second: number = 0;
+  protected timerID: any;
   protected winAlert: boolean = false;
   protected move: number = 0;
   protected isStarted: boolean = false;
+  //errorHandler
+  usernameExist: boolean = false;
 
   @ViewChild('content')
   myModal!: ElementRef;
@@ -37,6 +39,7 @@ export class MemoryComponent implements OnInit {
   ngOnInit(): void {}
 
   start(): void {
+    this.modal.open(this.myModal);
     this.isStarted = true;
     for (let i = 1; i <= 20; i++) {
       let y = i <= 10 ? i : i - 10;
@@ -131,8 +134,17 @@ export class MemoryComponent implements OnInit {
 
     this.http
       .post(this.url, userRecord)
-      .pipe(switchMap((res) => this.router.navigate(['/rank'])))
-      .subscribe((res) => console.log(res));
+      .pipe(
+        switchMap(() => this.router.navigate(['/rank'])),
+        catchError((err: HttpErrorResponse) => {
+          if (err.error === 'username already exist') {
+            this.usernameExist = true;
+            return throwError(() => new Error('username already exist'));
+          }
+          return throwError(() => new Error('qualcosa è andato storto'));
+        })
+      )
+      .subscribe((res) => this.modal.dismissAll());
   }
 
   protected reset() {
