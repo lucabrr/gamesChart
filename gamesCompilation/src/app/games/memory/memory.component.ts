@@ -1,6 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { catchError, switchMap, throwError } from 'rxjs';
 import { IcardMemory } from 'src/app/interface/IcardMemory';
 
 @Component({
@@ -26,12 +28,15 @@ export class MemoryComponent implements OnInit {
 
   protected url: string = 'http://localhost:8080/api/userRecord';
 
-  constructor(private http: HttpClient, private modal: NgbModal) {}
+  constructor(
+    private http: HttpClient,
+    private modal: NgbModal,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {}
 
   start(): void {
-    this.modal.open(this.myModal);
     this.isStarted = true;
     for (let i = 1; i <= 20; i++) {
       let y = i <= 10 ? i : i - 10;
@@ -110,10 +115,11 @@ export class MemoryComponent implements OnInit {
     if (this.winCondition()) {
       clearInterval(this.timerID);
       this.winAlert = true;
+      this.modal.open(this.myModal);
     }
   }
 
-  protected inviaDati(_username: string) {
+  protected inviaDati(_username: string): void {
     const today = new Date();
     const date = today.toISOString().substring(0, 10);
     const userRecord = {
@@ -123,12 +129,21 @@ export class MemoryComponent implements OnInit {
     };
     console.log(userRecord);
 
-    this.http.post(this.url, userRecord).subscribe((res) => console.log(res));
+    this.http
+      .post(this.url, userRecord)
+      .pipe(switchMap((res) => this.router.navigate(['/rank'])))
+      .subscribe((res) => console.log(res));
   }
 
-  // start button
-
-  // protected getRecord() {
-  //   return this.http.get(this.url).subscribe((res) => console.log(res));
-  // }
+  protected reset() {
+    this.unshuffledArray = [];
+    this.cardContainer = [];
+    this.arrayChecker = [];
+    this.minute = 0;
+    this.second = 0;
+    this.winAlert = false;
+    this.move = 0;
+    this.isStarted = false;
+    this.start();
+  }
 }

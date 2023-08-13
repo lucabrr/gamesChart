@@ -44,6 +44,15 @@
 <ng-template #content let-modal>
   <div class="modal-body text-center">
     <p>Inserisciti in classifica!</p>
+    <div
+      class="alert alert-primary fw-bold m-1 p-2"
+      role="alert"
+      *ngIf="winAlert"
+    >
+      Hai completato il Memory game con: {{ move }} mosse in {{ minute }}:{{
+        second
+      }}s
+    </div>
   </div>
   <div
     class="modal-footer justify-content-center d-flex flex-column align-items-center"
@@ -75,10 +84,16 @@
       class="col-3 mt-2 btn btn-success fw-bold"
       [disabled]="!regForm.valid"
       (click)="inviaDati(username.value)"
+      (click)="modal.close()"
     >
       invia
     </button>
-    <button type="button" class="btn btn-primary" (click)="modal.close()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="modal.close()"
+      (click)="reset()"
+    >
       Gioca di nuovo
     </button>
   </div>
