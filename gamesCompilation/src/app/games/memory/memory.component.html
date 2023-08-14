@@ -2,9 +2,9 @@
   *ngIf="!isStarted"
   class="d-flex justify-content-center align-items-center h-100 flex-column"
 >
-  <h1>Start MemoryGame</h1>
+  <h1>MemoryGame</h1>
   <button class="btn btn-success me-3 fw-bold mt-2" (click)="start()">
-    start the game
+    Start
   </button>
 </div>
 <div class="mainContainer h-100" *ngIf="isStarted">
@@ -43,21 +43,25 @@
   </div>
 </div>
 <ng-template #content let-modal [backdrop]="'static'">
+  <div class="modal-header">
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
   <div class="modal-body text-center">
-    <p>Inserisciti in classifica!</p>
-    <div
-      class="alert alert-primary fw-bold m-1 p-2"
-      role="alert"
-      *ngIf="winAlert"
-    >
+    <div class="alert alert-success" role="alert">
       Hai completato il Memory game con: {{ move }} mosse in {{ minute }}:{{
         second
       }}s
     </div>
   </div>
   <div
-    class="modal-footer justify-content-center d-flex flex-column align-items-center"
+    class="modal-footer justify-content-center d-flex align-items-center flex-column"
   >
+    <p>Inserisciti in classifica!</p>
     <form
       class="row text-center alingn-center justify-content-center flex-column form-group"
       #regForm="ngForm"
@@ -74,6 +78,13 @@
         maxlength="8"
         [pattern]="usernameRegex"
       />
+      <div
+        *ngIf="isLoading"
+        class="alert alert-secondary text-center fw-2"
+        role="alert"
+      >
+        Loading..
+      </div>
       <span
         *ngIf="username.invalid && username.touched"
         class="alert alert-danger col"
@@ -81,28 +92,30 @@
         il campo username deve contenere almeno 4 caratteri e massimo 8.
       </span>
       <div
-        *ngIf="usernameExist"
+        *ngIf="formError"
         class="alert alert-danger text-center fw-2"
         role="alert"
       >
-        username già in classifica.
+        {{ messagSpanError }}
       </div>
     </form>
-    <button
-      type="button"
-      class="col-3 mt-2 btn btn-success fw-bold"
-      [disabled]="!regForm.valid"
-      (click)="inviaDati(username.value)"
-    >
-      invia
-    </button>
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="modal.close()"
-      (click)="reset()"
-    >
-      Gioca di nuovo
-    </button>
+    <div>
+      <button
+        type="button"
+        class="me-3 btn btn-success fw-bold"
+        [disabled]="!regForm.valid"
+        (click)="inviaDati(username.value)"
+      >
+        Invia
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary fw-bold"
+        (click)="modal.close()"
+        (click)="reset()"
+      >
+        Gioca di nuovo
+      </button>
+    </div>
   </div>
 </ng-template>

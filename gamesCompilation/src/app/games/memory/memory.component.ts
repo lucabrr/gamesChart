@@ -22,9 +22,11 @@ export class MemoryComponent implements OnInit {
   protected winAlert: boolean = false;
   protected move: number = 0;
   protected isStarted: boolean = false;
+  protected isLoading: boolean = false;
   //errorHandler
-  usernameExist: boolean = false;
+  formError: boolean = false;
   usernameRegex: string = '^[a-zA-Z0-9]*$';
+  messagSpanError: string = '';
 
   @ViewChild('content')
   myModal!: ElementRef;
@@ -132,20 +134,29 @@ export class MemoryComponent implements OnInit {
       data: date,
     };
     console.log(userRecord);
-
+    this.isLoading = true;
     this.http
       .post(this.url, userRecord)
       .pipe(
         switchMap(() => this.router.navigate(['/rank'])),
         catchError((err: HttpErrorResponse) => {
           if (err.error === 'username already exist') {
-            this.usernameExist = true;
+            this.messagSpanError = 'username già in classifica ';
+            this.isLoading = false;
+            this.formError = true;
             return throwError(() => new Error('username already exist'));
           }
+          this.messagSpanError = 'qualcosa è andato storto riprova piu tardi ';
+          this.formError = true;
+          this.isLoading = false;
+          this.router.navigate(['/rank']);
           return throwError(() => new Error('qualcosa è andato storto'));
         })
       )
-      .subscribe((res) => this.modal.dismissAll());
+      .subscribe((res) => {
+        this.isLoading = false;
+        this.modal.dismissAll();
+      });
   }
 
   protected reset() {
@@ -158,5 +169,6 @@ export class MemoryComponent implements OnInit {
     this.move = 0;
     this.isStarted = false;
     this.start();
+    this.formError = false;
   }
 }
