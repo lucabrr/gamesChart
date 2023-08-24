@@ -16,6 +16,12 @@ const routes: Routes = [
       ),
   },
   { path: 'rank', component: RankComponent },
+  {
+    path: '',
+    pathMatch: 'full',
+    loadChildren: () =>
+      import('./games/memory/memory.module').then((m) => m.MemoryModule)
+  }
 ];
 
 @NgModule({
