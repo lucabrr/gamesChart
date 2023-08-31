@@ -31,7 +31,7 @@ export class MemoryComponent implements OnInit {
   @ViewChild('content')
   myModal!: ElementRef;
 
-  protected url: string = 'http://localhost:8080/api/userRecord';
+  protected url: string = 'https://gameschartbe.hop.sh/api/userRecord';
 
   constructor(
     private http: HttpClient,
