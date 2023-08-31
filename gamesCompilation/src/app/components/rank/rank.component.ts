@@ -12,7 +12,7 @@ import { IUserRecord } from 'src/app/interface/iuser-record';
 })
 export class RankComponent implements OnInit {
   url: string =
-    'http://localhost:8080/api/userRecord/pageable?page=0&size=10&sort=move,ASC';
+    'https://gameschartbe.hop.sh/api/userRecord/pageable?page=0&size=10&sort=move,ASC';
 
   rank: IUserRecord[] = [];
   serverError: boolean = false;
