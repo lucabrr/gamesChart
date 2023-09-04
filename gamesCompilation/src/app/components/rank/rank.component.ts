@@ -37,7 +37,6 @@ export class RankComponent implements OnInit {
       )
       .subscribe((res) => {
         this.rank = res.content;
-        console.log(this.rank);
         this.isLoading = false;
       });
   }

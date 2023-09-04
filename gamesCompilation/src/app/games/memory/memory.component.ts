@@ -133,7 +133,7 @@ export class MemoryComponent implements OnInit {
       move: this.move,
       data: date,
     };
-    console.log(userRecord);
+
     this.isLoading = true;
     this.http
       .post(this.url, userRecord)
