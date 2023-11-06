@@ -8,14 +8,27 @@
       <th scope="col">Date</th>
     </thead>
     <tbody>
-      <tr scope="row" *ngFor="let record of rank; let i = index">
-        <th>#{{ i + 1 }}</th>
+      <tr scope="row" *ngFor="let record of pageable.content; let i = index">
+        <th>#{{ pageIndex * 10 + i + 1 }}</th>
         <td>{{ record.username }}</td>
         <td>{{ record.move }}</td>
         <td>{{ record.data }}</td>
       </tr>
     </tbody>
   </table>
+  <nav
+    aria-label="Page navigation example"
+    class="d-flex justify-content-center"
+    *ngIf="rank.length > 0"
+  >
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link" (click)="previous()">Previous</a>
+      </li>
+
+      <li class="page-item"><a class="page-link" (click)="next()">Next</a></li>
+    </ul>
+  </nav>
   <div
     *ngIf="isLoading"
     class="alert alert-secondary text-center fw-2"
