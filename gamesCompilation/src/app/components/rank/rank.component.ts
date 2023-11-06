@@ -46,7 +46,7 @@ export class RankComponent implements OnInit {
       });
   }
   updateUrl(){
-    this.url = `http://localhost:8080/api/userRecord/pageable?page=${this.pageIndex}&size=10&sort=move,ASC`
+    this.url = `https://gameschartbe.hop.sh/api/userRecord/pageable?page=${this.pageIndex}&size=10&sort=move,ASC`;
   }
   previous(){
     if(this.pageIndex === 0){return}
